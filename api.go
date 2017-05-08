@@ -6,10 +6,12 @@ import (
 	"encoding/base64"
 	"errors"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 	"log"
 	"net/http"
 	"time"
 	"sort"
+        "os"
 )
 
 const (
@@ -119,5 +121,6 @@ func runAPI(dal *Dal, host, port string) {
 
 	http.Handle("/", r)
 	log.Printf("Listening on: %s:%s...", host, port)
-	http.ListenAndServe(host+":"+port, nil)
+        loggedRouter := handlers.LoggingHandler(os.Stdout, r)
+	http.ListenAndServe(host+":"+port, loggedRouter)
 }
